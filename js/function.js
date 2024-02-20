@@ -64,7 +64,7 @@ const getNumber = function (string) {
   let result = '';
 
   for (let i = 0; string.length - 1 >= i; i++) {
-    numberString = parseInt(string[i]);
+    numberString = parseInt(string[i], 10);
     if (!Number.isNaN(numberString)) {
       result += numberString;
     }
