@@ -1,24 +1,7 @@
 // Функция для проверки длины строки
 
-const checkStr = function (string, maxLength) {
-  if (string.length <= maxLength) {
-    console.log('Строка короче 20 символов');
-  } else {
-    console.log('Строка длиннее 10 символов');
-  }
-
-  // if (string.length = maxLength) {
-  //   console.log ('Длина строки ровно 18 символов');
-  // } else {
-  //   console.log ('Строка длиннее 10 символов');
-  // }
-
-  // if (string.length >= maxLength) {
-  //   console.log ('Строка длиннее 10 символов');
-  // }
-
-  return string;
-};
+const checkStr = (string, maxLength) => (string.length <= maxLength);
+console.log('Строка больше 20 символов')
 
 // Строка короче 20 символов
 checkStr('проверяемая строка', 20); // true
@@ -30,41 +13,39 @@ checkStr('проверяемая строка', 10); // false
 
 // Функция для проверки, является ли строка палиндромом.
 
-const palindrome = function (string) {
+const isPalindrome = (string) => {
   string = string.replaceAll(' ', '').toLowerCase();
-  const normalizeString = string;
-  let reverseString = '';
+  let reversedString = '';
 
-  for (let i = normalizeString.length - 1; i >= 0; i--) {
-    reverseString += normalizeString[i];
+  for (let i = string.length - 1; i >= 0; i--) {
+    reversedString += string[i];
   }
 
-  console.log(normalizeString + ' ' + reverseString);
+  console.log(string + ' ' + reversedString);
 
-  return reverseString === normalizeString;
+  return string === reversedString;
 
 };
 
-
 // Строка является палиндромом
-palindrome('топот'); // true
+isPalindrome('топот'); // true
 // Несмотря на разный регистр, тоже палиндром
-palindrome('ДовОд'); // true
+isPalindrome('ДовОд'); // true
 // Это не палиндром
-palindrome('Кекс');  // false
+isPalindrome('Кекс');  // false
 // Это палиндром
-palindrome('Лёша на полке клопа нашёл '); // true
+isPalindrome('Лёша на полке клопа нашёл '); // true
 
 
 // Функция принимает строку, извлекает содержащиеся в ней цифры от 0 до 9 и возвращает их в виде целого положительного числа.
 
-const getNumber = function (string) {
+const getNumber = (string) => {
   string = string.toString();
   let numberString;
   let result = '';
 
   for (let i = 0; string.length - 1 >= i; i++) {
-    numberString = parseInt(string[i]);
+    numberString = parseInt(string[i], 10);
     if (!Number.isNaN(numberString)) {
       result += numberString;
     }
