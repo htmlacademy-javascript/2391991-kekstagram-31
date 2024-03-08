@@ -24,4 +24,4 @@ export { getRandomInteger,
   generateUrl,
   generateMessage,
   getRandomElement,
- };
+};
