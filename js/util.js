@@ -19,9 +19,17 @@ const generateMessage = createId(0);
 //  Создаем генератор случайных элементов
 const getRandomElement = (elements) => elements[getRandomInteger(0, elements.length - 1)];
 
+// Проверка нажатия клавиши Escape
+const isEscapeKey = (evt) => evt.key === 'Escape';
+
+// Проверка нажатия клавиши Enter
+const isEnterKey = (evt) => evt.key === 'Enter';
+
 export { getRandomInteger,
   generateId,
   generateUrl,
   generateMessage,
   getRandomElement,
+  isEscapeKey,
+  isEnterKey
 };
