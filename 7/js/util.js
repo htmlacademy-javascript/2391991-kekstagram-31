@@ -22,8 +22,8 @@ const getRandomElement = (elements) => elements[getRandomInteger(0, elements.len
 // Проверка нажатия клавиши Escape
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
-// Проверка нажатия клавиши Enter
-const isEnterKey = (evt) => evt.key === 'Enter';
+// // Проверка нажатия клавиши Enter
+// const isEnterKey = (evt) => evt.key === 'Enter';
 
 export { getRandomInteger,
   generateId,
@@ -31,5 +31,5 @@ export { getRandomInteger,
   generateMessage,
   getRandomElement,
   isEscapeKey,
-  isEnterKey
+  // isEnterKey
 };

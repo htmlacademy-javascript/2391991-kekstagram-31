@@ -4,5 +4,4 @@ import './photos/thumbnails.js';
 import './comments.js';
 import './photos/big-photo.js';
 
-// Данный вывод необходим для проверки
-console.log(similarUser);
+similarUser();
