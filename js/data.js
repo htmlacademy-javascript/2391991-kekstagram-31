@@ -39,7 +39,7 @@ const MESSAGES = [
 // Создаем комментарий
 const createComment = () => ({
   id: getRandomInteger(generateMessage(), 200),
-  avatar: `'img/avatar-${getRandomInteger(1,6)}.svg'`,
+  avatar: `img/avatar-${getRandomInteger(1,6)}.svg`,
   message: getRandomElement(MESSAGES),
   name: getRandomElement(NAMES)
 });
