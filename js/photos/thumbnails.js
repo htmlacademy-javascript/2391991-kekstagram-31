@@ -20,3 +20,19 @@ photos.forEach(({url, description, likes, comments}) => {
 pictures.appendChild(photosFragment);
 
 export { photos };
+
+
+// photos.forEach(({id, url, likes, comments}) => {
+//   const pictures = template.cloneNode(true);
+
+//   pictures.dataset.photoId = id;
+//   pictures.querySelector('.picture__img').src = url;
+//   pictures.querySelector('.picture__likes').textContent = likes;
+//   pictures.querySelector('.picture__comments').textContent = comments.length;
+
+//   photosFragment.appendChild(pictures);
+// });
+
+// pictures.appendChild(photosFragment);
+
+// export { pictures };
