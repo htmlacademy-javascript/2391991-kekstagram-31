@@ -10,6 +10,14 @@ const uploadCloseButton = imageOverlay.querySelector('.img-upload__cancel');
 
 const MAX_SYMBOLS = 20;
 
+const pristine = new Pristine(form, {
+  classTo: 'img-upload__field-wrapper',
+  errorClass: 'img-upload__field-wrapper--error',
+  errorTextParent: 'img-upload__field-wrapper',
+  errorTextTag: 'div',
+  errorTextClass: 'text__error'
+}, false);
+
 const onDocumentKeydown = function (keydownEvt) {
   if (isEscapeKey(keydownEvt) && document.activeElement !== imageDescription && document.activeElement !== imageHashtags) {
     keydownEvt.preventDefault();
@@ -27,7 +35,6 @@ imageInput.addEventListener('change', () => {
   pristine.validate();
 });
 
-
 function closeUploadImgModal () {
   document.removeEventListener('keydown', onDocumentKeydown);
 
@@ -38,20 +45,11 @@ function closeUploadImgModal () {
   form.reset();
 }
 
-const pristine = new Pristine(form, {
-  classTo: 'img-upload__field-wrapper',
-  errorClass: 'img-upload__field-wrapper--error',
-  errorTextParent: 'img-upload__field-wrapper',
-  errorTextTag: 'div',
-  errorTextClass: 'text__error'
-}, false);
-
 function validateDescription (value) {
   return value.length <= 140;
 }
 
 pristine.addValidator(imageDescription, validateDescription, 'Длина комментария не может превышать 140 символов.');
-
 
 let errorMessage = '';
 
@@ -87,7 +85,7 @@ const isValidHashtags = (value) => {
     },
     {
       check: inputArray.some((item) => item.length > MAX_SYMBOLS),
-      error: 'Максимальная длина одного хештега ${MAX_SYMBOLS} символов, включая решетку',
+      error: `Максимальная длина одного хештега ${MAX_SYMBOLS} символов, включая решетку`,
     },
     {
       check: inputArray.length > 5,
