@@ -1,4 +1,6 @@
 import {isEscapeKey} from './util.js';
+import {addScaleListeners, removeScaleListeners} from './image-scale-editor.js';
+import {addEffectsListeners, removeEffectsListeners} from './effect-slider.js';
 
 const body = document.querySelector('body');
 const form = document.querySelector('.img-upload__form');
@@ -9,6 +11,15 @@ const imageDescription = form.querySelector('.text__description');
 const uploadCloseButton = imageOverlay.querySelector('.img-upload__cancel');
 
 const MAX_SYMBOLS = 20;
+const MAX_HASHTAGS = 5;
+
+const pristine = new Pristine(form, {
+  classTo: 'img-upload__field-wrapper',
+  errorClass: 'img-upload__field-wrapper--error',
+  errorTextParent: 'img-upload__field-wrapper',
+  errorTextTag: 'div',
+  errorTextClass: 'text__error'
+});
 
 const onDocumentKeydown = function (keydownEvt) {
   if (isEscapeKey(keydownEvt) && document.activeElement !== imageDescription && document.activeElement !== imageHashtags) {
@@ -21,16 +32,19 @@ imageInput.addEventListener('change', () => {
   imageOverlay.classList.remove('hidden');
   body.classList.add('modal-open');
 
+  addScaleListeners();
+  addEffectsListeners();
 
   document.addEventListener('keydown', onDocumentKeydown);
 
   pristine.validate();
 });
 
-
 function closeUploadImgModal () {
   document.removeEventListener('keydown', onDocumentKeydown);
 
+  removeScaleListeners();
+  removeEffectsListeners();
 
   imageOverlay.classList.add('hidden');
   body.classList.remove('modal-open');
@@ -38,20 +52,11 @@ function closeUploadImgModal () {
   form.reset();
 }
 
-const pristine = new Pristine(form, {
-  classTo: 'img-upload__field-wrapper',
-  errorClass: 'img-upload__field-wrapper--error',
-  errorTextParent: 'img-upload__field-wrapper',
-  errorTextTag: 'div',
-  errorTextClass: 'text__error'
-}, false);
-
 function validateDescription (value) {
   return value.length <= 140;
 }
 
 pristine.addValidator(imageDescription, validateDescription, 'Длина комментария не может превышать 140 символов.');
-
 
 let errorMessage = '';
 
@@ -87,11 +92,11 @@ const isValidHashtags = (value) => {
     },
     {
       check: inputArray.some((item) => item.length > MAX_SYMBOLS),
-      error: 'Максимальная длина одного хештега ${MAX_SYMBOLS} символов, включая решетку',
+      error: `Максимальная длина одного хештега ${MAX_SYMBOLS} символов, включая решетку`,
     },
     {
-      check: inputArray.length > 5,
-      error: 'Нельзя указать больше 5 хештегов',
+      check: inputArray.length > MAX_HASHTAGS,
+      error: `Нельзя указать больше ${MAX_HASHTAGS} хештегов`,
     },
     {
       check: inputArray.some((item) => !/^#[a-zа-яё0-9]{1,19}$/i.test(item)),
