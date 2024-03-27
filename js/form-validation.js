@@ -1,4 +1,6 @@
 import {isEscapeKey} from './util.js';
+import {addScaleListeners, removeScaleListeners} from './image-scale-editor.js';
+import {addEffectsListeners, removeEffectsListeners} from './effect-slider.js';
 
 const body = document.querySelector('body');
 const form = document.querySelector('.img-upload__form');
@@ -9,6 +11,7 @@ const imageDescription = form.querySelector('.text__description');
 const uploadCloseButton = imageOverlay.querySelector('.img-upload__cancel');
 
 const MAX_SYMBOLS = 20;
+const MAX_HASHTAGS = 5;
 
 const pristine = new Pristine(form, {
   classTo: 'img-upload__field-wrapper',
@@ -16,7 +19,7 @@ const pristine = new Pristine(form, {
   errorTextParent: 'img-upload__field-wrapper',
   errorTextTag: 'div',
   errorTextClass: 'text__error'
-}, false);
+});
 
 const onDocumentKeydown = function (keydownEvt) {
   if (isEscapeKey(keydownEvt) && document.activeElement !== imageDescription && document.activeElement !== imageHashtags) {
@@ -29,6 +32,8 @@ imageInput.addEventListener('change', () => {
   imageOverlay.classList.remove('hidden');
   body.classList.add('modal-open');
 
+  addScaleListeners();
+  addEffectsListeners();
 
   document.addEventListener('keydown', onDocumentKeydown);
 
@@ -38,6 +43,8 @@ imageInput.addEventListener('change', () => {
 function closeUploadImgModal () {
   document.removeEventListener('keydown', onDocumentKeydown);
 
+  removeScaleListeners();
+  removeEffectsListeners();
 
   imageOverlay.classList.add('hidden');
   body.classList.remove('modal-open');
@@ -88,8 +95,8 @@ const isValidHashtags = (value) => {
       error: `Максимальная длина одного хештега ${MAX_SYMBOLS} символов, включая решетку`,
     },
     {
-      check: inputArray.length > 5,
-      error: 'Нельзя указать больше 5 хештегов',
+      check: inputArray.length > MAX_HASHTAGS,
+      error: `Нельзя указать больше ${MAX_HASHTAGS} хештегов`,
     },
     {
       check: inputArray.some((item) => !/^#[a-zа-яё0-9]{1,19}$/i.test(item)),
