@@ -1,6 +1,7 @@
 import {isEscapeKey} from './util.js';
 import {addScaleListeners, removeScaleListeners} from './image-scale-editor.js';
 import {addEffectsListeners, removeEffectsListeners} from './effect-slider.js';
+import { sendData } from './api.js';
 
 const body = document.querySelector('body');
 const form = document.querySelector('.img-upload__form');
@@ -9,6 +10,24 @@ const imageOverlay = form.querySelector('.img-upload__overlay');
 const imageHashtags = form.querySelector('.text__hashtags');
 const imageDescription = form.querySelector('.text__description');
 const uploadCloseButton = imageOverlay.querySelector('.img-upload__cancel');
+const submitButton = form.querySelector('.img_upload__submit');
+
+const successSubmition = document.querySelector('#success').content;
+const errorSubmition = document.querySelector('#error').content;
+
+body.appendChild(successSubmition);
+const successMessage = body.querySelector('.success');
+successMessage.classList.add('hidden');
+
+body.appendChild(errorSubmition);
+const errorMessage = body.querySelector('.error');
+errorMessage.classList.add('hidden');
+
+const successInner = successMessage.querySelector('.success__inner');
+const errorInner = errorMessage.querySelector('.error__inner');
+
+const errorButton = errorInner.querySelector('.error__button');
+const successButton = successInner.querySelector('.success__button');
 
 const MAX_SYMBOLS = 20;
 const MAX_HASHTAGS = 5;
@@ -22,34 +41,73 @@ const pristine = new Pristine(form, {
 });
 
 const onDocumentKeydown = function (keydownEvt) {
-  if (isEscapeKey(keydownEvt) && document.activeElement !== imageDescription && document.activeElement !== imageHashtags) {
+  if (isEscapeKey(keydownEvt) && document.activeElement !== imageDescription &&
+      document.activeElement !== imageHashtags && errorMessage.classList.contains('hidden')) {
     keydownEvt.preventDefault();
     closeUploadImgModal();
   }
 };
 
-imageInput.addEventListener('change', () => {
-  imageOverlay.classList.remove('hidden');
-  body.classList.add('modal-open');
+const closeSuccessByClick = (clickEvt) => {
+  if (!clickEvt.composePath().includes(successInner)) {
+    successMessage.classList.add('hidden');
+    removeSuccessListeners();
+  }
+};
 
-  addScaleListeners();
-  addEffectsListeners();
+const closeErrorByClick = (clickEvt) => {
+  if (!clickEvt.composePath().includes(errorInner)) {
+    errorMessage.classList.add('hidden');
+    removeErrorListeners();
+  }
+};
 
-  document.addEventListener('keydown', onDocumentKeydown);
+const closeSuccessByKeydown = (keydownEvt) => {
+  if (isEscapeKey(keydownEvt)) {
+    successMessage.classList.add('hidden');
+    removeSuccessListeners();
+  }
+};
 
-  pristine.validate();
-});
+const closeErrorByKeydown = (keydownEvt) => {
+  if (isEscapeKey(keydownEvt)) {
+    errorMessage.classList.add('hidden');
+    removeErrorListeners();
+  }
+};
 
-function closeUploadImgModal () {
-  document.removeEventListener('keydown', onDocumentKeydown);
+const onSuccessButton = () => {
+  successMessage.classList.add('hidden');
+  removeSuccessListeners();
+};
 
-  removeScaleListeners();
-  removeEffectsListeners();
+const onErrorButton = () => {
+  errorMessage.classList.add('hidden');
+  removeErrorListeners();
+};
 
-  imageOverlay.classList.add('hidden');
-  body.classList.remove('modal-open');
+const handleSuccessMessage = function () {
+  document.addEventListener('click', closeSuccessByClick);
+  document.addEventListener('keydown', closeSuccessByKeydown);
+  successButton.addEventListener('click', onSuccessButton);
+};
 
-  form.reset();
+function removeSuccessListeners () {
+  document.removeEventListener('click', closeSuccessByClick);
+  document.removeEventListener('keydown', closeSuccessByKeydown);
+  successButton.removeEventListener('click', onSuccessButton);
+}
+
+const handleErrorMessage = function () {
+  document.addEventListener('click', closeErrorByClick);
+  document.addEventListener('keydown', closeErrorByKeydown);
+  errorButton.addEventListener('click', onErrorButton);
+};
+
+function removeErrorListeners () {
+  document.removeEventListener('click', closeErrorByClick);
+  document.removeEventListener('keydown', closeErrorByKeydown);
+  errorButton.removeEventListener('click', onErrorButton);
 }
 
 function validateDescription (value) {
@@ -58,12 +116,12 @@ function validateDescription (value) {
 
 pristine.addValidator(imageDescription, validateDescription, 'Длина комментария не может превышать 140 символов.');
 
-let errorMessage = '';
+let errorMessageHashtags = '';
 
-const error = () => errorMessage;
+const error = () => errorMessageHashtags;
 
 const isValidHashtags = (value) => {
-  errorMessage = '';
+  errorMessageHashtags = '';
 
   const inputText = value.toLowerCase().trim();
 
@@ -107,7 +165,7 @@ const isValidHashtags = (value) => {
   return rules.every((rule) => {
     const isInvalid = rule.check;
     if(isInvalid) {
-      errorMessage = rule.error;
+      errorMessageHashtags = rule.error;
     }
     return !isInvalid;
   });
@@ -115,12 +173,54 @@ const isValidHashtags = (value) => {
 
 pristine.addValidator(imageHashtags, isValidHashtags, error);
 
-form.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-  const validation = pristine.validate();
-  if (validation) {
-    form.submit();
-  }
+const setUserFormSubmit = () => {
+  form.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    const validation = pristine.validate();
+    if (validation) {
+      // submitButton.disabled = true;
+      sendData(new FormData(evt.target))
+        .then(() => {
+          closeUploadImgModal();
+          successMessage.classList.remove('hidden');
+          handleSuccessMessage();
+        })
+        .catch(() => {
+          errorMessage.classList.remove('hidden');
+          handleErrorMessage();
+        })
+        .finally(() => {
+          // submitButton.disabled = false;
+        });
+    }
+  });
+
+};
+
+imageInput.addEventListener('change', () => {
+  imageOverlay.classList.remove('hidden');
+  body.classList.add('modal-open');
+
+  addScaleListeners();
+  addEffectsListeners();
+
+  document.addEventListener('keydown', onDocumentKeydown);
+
+  pristine.validate();
 });
 
+function closeUploadImgModal () {
+  document.removeEventListener('keydown', onDocumentKeydown);
+
+  removeScaleListeners();
+  removeEffectsListeners();
+
+  imageOverlay.classList.add('hidden');
+  body.classList.remove('modal-open');
+
+  form.reset();
+}
+
 uploadCloseButton.addEventListener('click', closeUploadImgModal);
+
+export {setUserFormSubmit};
