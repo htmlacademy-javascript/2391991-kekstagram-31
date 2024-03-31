@@ -15,7 +15,7 @@ function onSmallerClick () {
     imagePreview.style.transform = `scale(${scale})`;
     scaleValue.value = `${scale * 100}%`;
   }
-};
+}
 
 function onBiggerClick () {
   if (scale < 1) {
@@ -23,7 +23,7 @@ function onBiggerClick () {
     imagePreview.style.transform = `scale(${scale})`;
     scaleValue.value = `${scale * 100}%`;
   }
-};
+}
 
 function addScaleListeners () {
   scaleValue.value = '100%';

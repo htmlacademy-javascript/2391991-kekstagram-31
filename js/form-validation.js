@@ -10,7 +10,7 @@ const imageOverlay = form.querySelector('.img-upload__overlay');
 const imageHashtags = form.querySelector('.text__hashtags');
 const imageDescription = form.querySelector('.text__description');
 const uploadCloseButton = imageOverlay.querySelector('.img-upload__cancel');
-const submitButton = form.querySelector('.img_upload__submit');
+const submitButton = form.querySelector('.img-upload__submit');
 
 const successSubmition = document.querySelector('#success').content;
 const errorSubmition = document.querySelector('#error').content;
@@ -49,14 +49,14 @@ const onDocumentKeydown = function (keydownEvt) {
 };
 
 const closeSuccessByClick = (clickEvt) => {
-  if (!clickEvt.composePath().includes(successInner)) {
+  if (!clickEvt.composedPath().includes(successInner)) {
     successMessage.classList.add('hidden');
     removeSuccessListeners();
   }
 };
 
 const closeErrorByClick = (clickEvt) => {
-  if (!clickEvt.composePath().includes(errorInner)) {
+  if (!clickEvt.composedPath().includes(errorInner)) {
     errorMessage.classList.add('hidden');
     removeErrorListeners();
   }
@@ -178,7 +178,7 @@ const setUserFormSubmit = () => {
     evt.preventDefault();
     const validation = pristine.validate();
     if (validation) {
-      // submitButton.disabled = true;
+      submitButton.disabled = true;
       sendData(new FormData(evt.target))
         .then(() => {
           closeUploadImgModal();
@@ -190,7 +190,7 @@ const setUserFormSubmit = () => {
           handleErrorMessage();
         })
         .finally(() => {
-          // submitButton.disabled = false;
+          submitButton.disabled = false;
         });
     }
   });
