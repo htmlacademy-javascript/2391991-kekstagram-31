@@ -1,6 +1,6 @@
 import {isEscapeKey} from '../util.js';
 import {renderComments, closeComments} from '../comments.js';
-import { photos } from '../photos/thumbnails.js';
+import { publicationPhotos } from '../photos/thumbnails.js';
 
 const body = document.querySelector('body');
 const pictures = document.querySelectorAll('.picture');
@@ -40,7 +40,7 @@ function bigPictureClose () {
 const clickHandlerPicture = (evt, i) => {
   evt.preventDefault();
   const clickPictureId = i + 1;
-  const finishPhoto = photos.find((photo) => photo.id === clickPictureId);
+  const finishPhoto = publicationPhotos.find((photo) => photo.id === clickPictureId);
   bigPictureOpen(finishPhoto);
 };
 
