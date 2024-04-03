@@ -7,6 +7,7 @@ const template = document.querySelector('#picture').content.querySelector('.pict
 // const photos = similarUser();
 
 const renderPublicationPhotos = (photos) => {
+  console.log(photos, 'photos');
   const photosFragment = document.createDocumentFragment();
 
   photos.forEach(({ url, description, likes, comments }) => {
@@ -22,4 +23,4 @@ const renderPublicationPhotos = (photos) => {
   pictures.appendChild(photosFragment);
 };
 
-export { renderPublicationPhotos };
+export { renderPublicationPhotos, pictures };

@@ -1,4 +1,5 @@
-import {clickHandlerPicture} from './photos/big-photo';
+// import {clickHandlerPicture} from './photos/big-photo';
+import { renderPublicationPhotos, pictures } from './photos/thumbnails';
 import { debounce } from './util';
 
 const FILTER = {
@@ -15,11 +16,11 @@ const SORTFUNC = {
 const MAX_PICTURE_COUNT = 10;
 
 let currentFilter = 'filter-default';
-let pictures = [];
+let photos = [];
 const filterElement = document.querySelector('.img-filters');
 const ACTIVE_BUTTON_CLASS = 'img-filters__button--active';
 
-const debounceRender = debounce(clickHandlerPicture);
+const debounceRender = debounce(renderPublicationPhotos);
 
 function onFilterChange(evt) {
   const targetButton = evt.target;
@@ -39,23 +40,25 @@ function onFilterChange(evt) {
 }
 
 function applyFilter() {
+
   let filteredPictures = [];
   if (currentFilter === FILTER.default) {
-    filteredPictures = pictures;
+    filteredPictures = photos;
   }
   if (currentFilter === FILTER.random) {
-    filteredPictures = pictures.toSorted(SORTFUNC.random).slice(0, MAX_PICTURE_COUNT);
+    filteredPictures = photos.toSorted(SORTFUNC.random).slice(0, MAX_PICTURE_COUNT);
   }
   if (currentFilter === FILTER.discussed) {
-    filteredPictures = pictures.toSorted(SORTFUNC.discussed);
+    filteredPictures = photos.toSorted(SORTFUNC.discussed);
   }
+  pictures.innerHTML = '';
   debounceRender(filteredPictures);
 }
 
 function configFilter(picturesData) {
   filterElement.classList.remove('img-filters--inactive');
   filterElement.addEventListener('click', onFilterChange);
-  pictures = picturesData;
+  photos = picturesData;
 }
 
 export {configFilter};

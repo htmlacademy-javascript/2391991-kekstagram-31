@@ -14,10 +14,10 @@ getData().then((photos) => {
     picture.addEventListener('click', (evt) => {
       clickHandlerPicture(evt, i, photos);
     })
-  })
-  .catch((err)=>{
-    showAlert(err.message);
   });
+})
+.catch((err)=>{
+  showAlert(err.message);
 });
 
 setUserFormSubmit();

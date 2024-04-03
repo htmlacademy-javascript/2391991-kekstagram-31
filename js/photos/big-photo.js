@@ -36,14 +36,14 @@ function bigPictureClose () {
   document.removeEventListener('keydown', onDocumentKeydown);
 }
 
-const clickHandlerPicture = (evt, i, pictures) => {
+const clickHandlerPicture = (evt, i, photos) => {
   evt.preventDefault();
   const clickPictureId = i;
-  const finishPhoto = pictures.find((photo) => photo.id === clickPictureId);
+  const finishPhoto = photos.find((photo) => photo.id === clickPictureId);
   bigPictureOpen(finishPhoto);
 };
 
-pictures.forEach((picture, i) => picture.addEventListener('click', (evt) => clickHandlerPicture(evt, i)));
+pictures.forEach((photos, i) => photos.addEventListener('click', (evt) => clickHandlerPicture(evt, i)));
 
 bigPictureCancel.addEventListener('click', () => {
   bigPictureClose();
