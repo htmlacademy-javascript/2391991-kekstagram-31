@@ -6,6 +6,23 @@ const getRandomInteger = (a, b) => {
   return Math.floor(result);
 };
 
+const getRandomArrayElements = (elements, count) =>{
+  if(count < 1){
+    return elements[getRandomInteger(0, elements.length - 1)];
+  } else if(count >= elements.length){
+    return elements;
+  }
+  const result = [];
+  for(let i = 0; i < count; i++){
+    let currentValue = elements[getRandomInteger(0, elements.length - 1)];
+    while(result.includes(currentValue)){
+      currentValue = elements[getRandomInteger(0, elements.length - 1)];
+    }
+    result.push(currentValue);
+  }
+  return result;
+};
+
 // Создает id
 const createId = (id) => function () {
   return ++id;
@@ -22,14 +39,33 @@ const getRandomElement = (elements) => elements[getRandomInteger(0, elements.len
 // Проверка нажатия клавиши Escape
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
-// // Проверка нажатия клавиши Enter
-// const isEnterKey = (evt) => evt.key === 'Enter';
+const errorTemplate = document.querySelector('#data-error').content.querySelector('section');
+function showAlert(message) {
+  const errorElement = errorTemplate.cloneNode(true);
+  const errorTitle = errorElement.querySelector('h2');
+  errorTitle.textContent = message;
+  document.body.insertAdjacentElement('beforeend',errorElement);
+  setTimeout(() => {
+    errorElement.remove();
+  }, 5000);
+}
+
+function debounce (callback, timeoutDelay = 500) {
+  let timeoutId;
+
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+}
 
 export { getRandomInteger,
+  getRandomArrayElements,
   generateId,
   generateUrl,
   generateMessage,
   getRandomElement,
   isEscapeKey,
-  // isEnterKey
+  showAlert,
+  debounce,
 };
