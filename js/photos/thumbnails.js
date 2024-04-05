@@ -1,19 +1,11 @@
-// import { similarUser } from '../data.js';
-
 const pictures = document.querySelector('.pictures');
 
 const template = document.querySelector('#picture').content.querySelector('.picture');
 
-// const photos = similarUser();
-
-let publicationPhotos;
-
 const renderPublicationPhotos = (photos) => {
   const photosFragment = document.createDocumentFragment();
 
-  publicationPhotos = photos;
-
-  photos.forEach(({url, description, likes, comments}) => {
+  photos.forEach(({ url, description, likes, comments }) => {
     const photo = template.cloneNode(true);
     photo.querySelector('.picture__img').src = url;
     photo.querySelector('.picture__img').alt = description;
@@ -26,4 +18,4 @@ const renderPublicationPhotos = (photos) => {
   pictures.appendChild(photosFragment);
 };
 
-export { publicationPhotos, renderPublicationPhotos };
+export { renderPublicationPhotos, pictures };
