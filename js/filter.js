@@ -38,6 +38,13 @@ function onFilterChange(evt) {
   applyFilter();
 }
 
+function isOldPosts () {
+  const oldPosts = pictures.querySelectorAll('.picture');
+  oldPosts.forEach((photo) => {
+    photo.remove();
+  });
+}
+
 function applyFilter() {
 
   let filteredPictures = [];
@@ -51,10 +58,7 @@ function applyFilter() {
     filteredPictures = photos.toSorted(SORTFUNC.discussed);
   }
 
-  const oldPosts = pictures.querySelectorAll('.picture');
-  oldPosts.forEach((photo) => {
-    photo.remove();
-  });
+  isOldPosts();
 
   debounceRender(filteredPictures);
 }
