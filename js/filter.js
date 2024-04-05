@@ -1,4 +1,3 @@
-// import {clickHandlerPicture} from './photos/big-photo';
 import { renderPublicationPhotos, pictures } from './photos/thumbnails';
 import { debounce } from './util';
 
@@ -51,7 +50,12 @@ function applyFilter() {
   if (currentFilter === FILTER.discussed) {
     filteredPictures = photos.toSorted(SORTFUNC.discussed);
   }
-  pictures.innerHTML = '';
+
+  const oldPosts = pictures.querySelectorAll('.picture');
+  oldPosts.forEach((photo) => {
+    photo.remove();
+  });
+
   debounceRender(filteredPictures);
 }
 

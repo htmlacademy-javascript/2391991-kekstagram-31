@@ -1,13 +1,8 @@
-// import { similarUser } from '../data.js';
-
 const pictures = document.querySelector('.pictures');
 
 const template = document.querySelector('#picture').content.querySelector('.picture');
 
-// const photos = similarUser();
-
 const renderPublicationPhotos = (photos) => {
-  console.log(photos, 'photos');
   const photosFragment = document.createDocumentFragment();
 
   photos.forEach(({ url, description, likes, comments }) => {
