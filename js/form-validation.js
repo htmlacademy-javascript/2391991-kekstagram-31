@@ -3,8 +3,12 @@ import {addScaleListeners, removeScaleListeners} from './image-scale-editor.js';
 import {addEffectsListeners, removeEffectsListeners} from './effect-slider.js';
 import { sendData } from './api.js';
 
+const FILE_TYPES = ['jpg', 'jpeg', 'png'];
+
 const body = document.querySelector('body');
 const form = document.querySelector('.img-upload__form');
+const imagePreview = form.querySelector('.img-upload__preview > img');
+const imagePreviewEffects = document.querySelectorAll('.effects__preview');
 const imageInput = form.querySelector('.img-upload__input');
 const imageOverlay = form.querySelector('.img-upload__overlay');
 const imageHashtags = form.querySelector('.text__hashtags');
@@ -200,6 +204,20 @@ const setUserFormSubmit = () => {
 imageInput.addEventListener('change', () => {
   imageOverlay.classList.remove('hidden');
   body.classList.add('modal-open');
+
+  const file = imageInput.files[0];
+  const fileName = file.name.toLowerCase();
+  const fileExt = fileName.split('.').pop();
+  const matches = FILE_TYPES.includes(fileExt);
+  if (matches) {
+    const url = URL.createObjectURL(file);
+    imagePreview.src = url;
+    imagePreviewEffects.forEach((item) => {
+      item.style.backgroundImage = `url(${url})`;
+    });
+  } else {
+    return;
+  }
 
   addScaleListeners();
   addEffectsListeners();
