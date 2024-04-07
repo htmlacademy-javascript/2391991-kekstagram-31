@@ -1,19 +1,12 @@
-import {isEscapeKey} from './util.js';
-import {addScaleListeners, removeScaleListeners} from './image-scale-editor.js';
-import {addEffectsListeners, removeEffectsListeners} from './effect-slider.js';
-import { sendData } from './api.js';
 
-const FILE_TYPES = ['jpg', 'jpeg', 'png'];
+import { sendData } from './api.js';
+import { closeUploadImgModal } from './form.js';
+import { isEscapeKey } from './util.js';
 
 const body = document.querySelector('body');
 const form = document.querySelector('.img-upload__form');
-const imagePreview = form.querySelector('.img-upload__preview > img');
-const imagePreviewEffects = document.querySelectorAll('.effects__preview');
-const imageInput = form.querySelector('.img-upload__input');
-const imageOverlay = form.querySelector('.img-upload__overlay');
 const imageHashtags = form.querySelector('.text__hashtags');
 const imageDescription = form.querySelector('.text__description');
-const uploadCloseButton = imageOverlay.querySelector('.img-upload__cancel');
 const submitButton = form.querySelector('.img-upload__submit');
 
 const successSubmition = document.querySelector('#success').content;
@@ -44,49 +37,42 @@ const pristine = new Pristine(form, {
   errorTextClass: 'text__error'
 });
 
-const onDocumentKeydown = function (keydownEvt) {
-  if (isEscapeKey(keydownEvt) && document.activeElement !== imageDescription &&
-      document.activeElement !== imageHashtags && errorMessage.classList.contains('hidden')) {
-    keydownEvt.preventDefault();
-    closeUploadImgModal();
-  }
-};
 
 const closeSuccessByClick = (clickEvt) => {
   if (!clickEvt.composedPath().includes(successInner)) {
-    successMessage.classList.add('hidden');
+    successMessage.remove();
     removeSuccessListeners();
   }
 };
 
 const closeErrorByClick = (clickEvt) => {
   if (!clickEvt.composedPath().includes(errorInner)) {
-    errorMessage.classList.add('hidden');
+    errorMessage.remove();
     removeErrorListeners();
   }
 };
 
 const closeSuccessByKeydown = (keydownEvt) => {
   if (isEscapeKey(keydownEvt)) {
-    successMessage.classList.add('hidden');
+    successMessage.remove();
     removeSuccessListeners();
   }
 };
 
 const closeErrorByKeydown = (keydownEvt) => {
   if (isEscapeKey(keydownEvt)) {
-    errorMessage.classList.add('hidden');
+    errorMessage.remove();
     removeErrorListeners();
   }
 };
 
 const onSuccessButton = () => {
-  successMessage.classList.add('hidden');
+  successMessage.remove();
   removeSuccessListeners();
 };
 
 const onErrorButton = () => {
-  errorMessage.classList.add('hidden');
+  errorMessage.remove();
   removeErrorListeners();
 };
 
@@ -94,6 +80,7 @@ const handleSuccessMessage = function () {
   document.addEventListener('click', closeSuccessByClick);
   document.addEventListener('keydown', closeSuccessByKeydown);
   successButton.addEventListener('click', onSuccessButton);
+  pristine.reset();
 };
 
 function removeSuccessListeners () {
@@ -106,6 +93,7 @@ const handleErrorMessage = function () {
   document.addEventListener('click', closeErrorByClick);
   document.addEventListener('keydown', closeErrorByKeydown);
   errorButton.addEventListener('click', onErrorButton);
+  pristine.reset();
 };
 
 function removeErrorListeners () {
@@ -201,44 +189,4 @@ const setUserFormSubmit = () => {
 
 };
 
-imageInput.addEventListener('change', () => {
-  imageOverlay.classList.remove('hidden');
-  body.classList.add('modal-open');
-
-  const file = imageInput.files[0];
-  const fileName = file.name.toLowerCase();
-  const fileExt = fileName.split('.').pop();
-  const matches = FILE_TYPES.includes(fileExt);
-  if (matches) {
-    const url = URL.createObjectURL(file);
-    imagePreview.src = url;
-    imagePreviewEffects.forEach((item) => {
-      item.style.backgroundImage = `url(${url})`;
-    });
-  } else {
-    return;
-  }
-
-  addScaleListeners();
-  addEffectsListeners();
-
-  document.addEventListener('keydown', onDocumentKeydown);
-
-  pristine.validate();
-});
-
-function closeUploadImgModal () {
-  document.removeEventListener('keydown', onDocumentKeydown);
-
-  removeScaleListeners();
-  removeEffectsListeners();
-
-  imageOverlay.classList.add('hidden');
-  body.classList.remove('modal-open');
-
-  form.reset();
-}
-
-uploadCloseButton.addEventListener('click', closeUploadImgModal);
-
-export {setUserFormSubmit};
+export {setUserFormSubmit, pristine};
