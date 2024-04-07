@@ -1,5 +1,4 @@
-// import { similarUser } from './data.js';
-import './util.js';
+import {showAlert} from './util.js';
 import { setUserFormSubmit } from './form-validation.js';
 import { clickHandlerPicture } from './photos/big-photo.js';
 import { configFilter } from './filter.js';
@@ -13,11 +12,11 @@ getData().then((photos) => {
   pictures.forEach((picture, i) => {
     picture.addEventListener('click', (evt) => {
       clickHandlerPicture(evt, i, photos);
-    })
+    });
   });
 })
-.catch((err)=>{
-  showAlert(err.message);
-});
+  .catch((err)=>{
+    showAlert(err.message);
+  });
 
 setUserFormSubmit();
