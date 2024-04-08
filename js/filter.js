@@ -1,6 +1,8 @@
 import { debounce } from './util';
 import { renderPublication } from './render-filter-publication';
 
+const MAX_PICTURE_COUNT = 10;
+
 const FILTERS = {
   default: 'filter-default',
   random: 'filter-random',
@@ -11,8 +13,6 @@ const SORTFUNC = {
   random: () => 0.5 - Math.random(),
   discussed: (a, b) => b.comments.length - a.comments.length,
 };
-
-const MAX_PICTURE_COUNT = 10;
 
 let currentFilter = 'filter-default';
 let photos = [];

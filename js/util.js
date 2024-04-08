@@ -1,3 +1,5 @@
+const ERROR_TIME = 5000;
+
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
 const errorTemplate = document.querySelector('#data-error').content.querySelector('section');
@@ -8,10 +10,10 @@ function showAlert(message) {
   document.body.insertAdjacentElement('beforeend',errorElement);
   setTimeout(() => {
     errorElement.remove();
-  }, 5000);
+  }, ERROR_TIME);
 }
 
-function debounce (callback, timeoutDelay = 500) {
+const debounce = (callback, timeoutDelay = 500) => {
   let timeoutId;
 
   return (...rest) => {
