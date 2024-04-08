@@ -1,3 +1,5 @@
+const SCALE_STEP = 0.25;
+
 const form = document.querySelector('.img-upload__form');
 const imagePreview = form.querySelector('.img-upload__preview img');
 
@@ -6,7 +8,6 @@ const scaleValue = imageScale.querySelector('.scale__control--value');
 const smallerScale = imageScale.querySelector('.scale__control--smaller');
 const biggerScale = imageScale.querySelector('.scale__control--bigger');
 
-const SCALE_STEP = 0.25;
 let scale = 1;
 
 function onSmallerClick () {
