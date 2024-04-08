@@ -1,4 +1,3 @@
-// Проверка нажатия клавиши Escape
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
 const errorTemplate = document.querySelector('#data-error').content.querySelector('section');

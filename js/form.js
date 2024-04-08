@@ -15,15 +15,10 @@ const imageHashtags = form.querySelector('.text__hashtags');
 const imageDescription = form.querySelector('.text__description');
 const uploadCloseButton = imageOverlay.querySelector('.img-upload__cancel');
 
-const errorSubmition = document.querySelector('#error').content;
-
-body.appendChild(errorSubmition);
-const errorMessage = body.querySelector('.error');
-errorMessage.classList.add('hidden');
-
 const onDocumentKeydown = function (keydownEvt) {
+  const errorMessage = body.querySelector('.error');
   if (isEscapeKey(keydownEvt) && document.activeElement !== imageDescription &&
-      document.activeElement !== imageHashtags && errorMessage.classList.contains('hidden')) {
+      document.activeElement !== imageHashtags && !errorMessage) {
     keydownEvt.preventDefault();
     closeUploadImgModal();
   }

@@ -2,7 +2,6 @@ import {isEscapeKey} from '../util.js';
 import {renderComments, closeComments} from '../comments.js';
 
 const body = document.querySelector('body');
-const pictures = document.querySelectorAll('.picture');
 
 const bigPicture = document.querySelector('.big-picture');
 const bigPictureCancel = bigPicture.querySelector('.big-picture__cancel');
@@ -17,7 +16,9 @@ const onDocumentKeydown = (evt) => {
   }
 };
 
-function bigPictureOpen (photo) {
+const bigPictureOpen = (evt, photo) => {
+  evt.preventDefault();
+
   bigPicture.classList.remove('hidden');
   body.classList.add('modal-open');
 
@@ -26,8 +27,9 @@ function bigPictureOpen (photo) {
   bigPictureSocialCaption.textContent = photo.description;
 
   renderComments(photo.comments);
+
   document.addEventListener('keydown', onDocumentKeydown);
-}
+};
 
 function bigPictureClose () {
   bigPicture.classList.add('hidden');
@@ -36,17 +38,9 @@ function bigPictureClose () {
   document.removeEventListener('keydown', onDocumentKeydown);
 }
 
-const clickHandlerPicture = (evt, i, photos) => {
-  evt.preventDefault();
-  const clickPictureId = i;
-  const finishPhoto = photos.find((photo) => photo.id === clickPictureId);
-  bigPictureOpen(finishPhoto);
-};
-
-pictures.forEach((photos, i) => photos.addEventListener('click', (evt) => clickHandlerPicture(evt, i)));
-
 bigPictureCancel.addEventListener('click', () => {
   bigPictureClose();
+  document.removeEventListener('keydown', onDocumentKeydown);
 });
 
-export {clickHandlerPicture};
+export {bigPictureOpen};

@@ -1,30 +1,13 @@
 
 import { sendData } from './api.js';
 import { closeUploadImgModal } from './form.js';
-import { isEscapeKey } from './util.js';
+import { handleSuccessMessage, handleErrorMessage } from './response-message.js';
 
-const body = document.querySelector('body');
 const form = document.querySelector('.img-upload__form');
 const imageHashtags = form.querySelector('.text__hashtags');
 const imageDescription = form.querySelector('.text__description');
 const submitButton = form.querySelector('.img-upload__submit');
 
-const successSubmition = document.querySelector('#success').content;
-const errorSubmition = document.querySelector('#error').content;
-
-body.appendChild(successSubmition);
-const successMessage = body.querySelector('.success');
-successMessage.classList.add('hidden');
-
-body.appendChild(errorSubmition);
-const errorMessage = body.querySelector('.error');
-errorMessage.classList.add('hidden');
-
-const successInner = successMessage.querySelector('.success__inner');
-const errorInner = errorMessage.querySelector('.error__inner');
-
-const errorButton = errorInner.querySelector('.error__button');
-const successButton = successInner.querySelector('.success__button');
 
 const MAX_SYMBOLS = 20;
 const MAX_HASHTAGS = 5;
@@ -37,70 +20,6 @@ const pristine = new Pristine(form, {
   errorTextClass: 'text__error'
 });
 
-
-const closeSuccessByClick = (clickEvt) => {
-  if (!clickEvt.composedPath().includes(successInner)) {
-    successMessage.remove();
-    removeSuccessListeners();
-  }
-};
-
-const closeErrorByClick = (clickEvt) => {
-  if (!clickEvt.composedPath().includes(errorInner)) {
-    errorMessage.remove();
-    removeErrorListeners();
-  }
-};
-
-const closeSuccessByKeydown = (keydownEvt) => {
-  if (isEscapeKey(keydownEvt)) {
-    successMessage.remove();
-    removeSuccessListeners();
-  }
-};
-
-const closeErrorByKeydown = (keydownEvt) => {
-  if (isEscapeKey(keydownEvt)) {
-    errorMessage.remove();
-    removeErrorListeners();
-  }
-};
-
-const onSuccessButton = () => {
-  successMessage.remove();
-  removeSuccessListeners();
-};
-
-const onErrorButton = () => {
-  errorMessage.remove();
-  removeErrorListeners();
-};
-
-const handleSuccessMessage = function () {
-  document.addEventListener('click', closeSuccessByClick);
-  document.addEventListener('keydown', closeSuccessByKeydown);
-  successButton.addEventListener('click', onSuccessButton);
-  pristine.reset();
-};
-
-function removeSuccessListeners () {
-  document.removeEventListener('click', closeSuccessByClick);
-  document.removeEventListener('keydown', closeSuccessByKeydown);
-  successButton.removeEventListener('click', onSuccessButton);
-}
-
-const handleErrorMessage = function () {
-  document.addEventListener('click', closeErrorByClick);
-  document.addEventListener('keydown', closeErrorByKeydown);
-  errorButton.addEventListener('click', onErrorButton);
-  pristine.reset();
-};
-
-function removeErrorListeners () {
-  document.removeEventListener('click', closeErrorByClick);
-  document.removeEventListener('keydown', closeErrorByKeydown);
-  errorButton.removeEventListener('click', onErrorButton);
-}
 
 function validateDescription (value) {
   return value.length <= 140;
@@ -174,11 +93,9 @@ const setUserFormSubmit = () => {
       sendData(new FormData(evt.target))
         .then(() => {
           closeUploadImgModal();
-          successMessage.classList.remove('hidden');
           handleSuccessMessage();
         })
         .catch(() => {
-          errorMessage.classList.remove('hidden');
           handleErrorMessage();
         })
         .finally(() => {
